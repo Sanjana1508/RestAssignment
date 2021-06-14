@@ -3,6 +3,7 @@ package com.rest.assignment.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +15,12 @@ public class BookServiceImpl implements BookService {
 	
 	@Autowired
 	private BookDAO bookDAO;
-
+	
 	@Override
 	@Transactional
-	public List<Book> findAll() {
-	
-		return bookDAO.findAll();
+	public List<Book> findAll(PageRequest pageRequest) {
+		 
+		return bookDAO.findAll(pageRequest);
 	}
 
 	@Override
@@ -41,6 +42,13 @@ public class BookServiceImpl implements BookService {
 	@Transactional
 	public void deleteById(int theId) {
 		bookDAO.deleteById(theId);
+	}
+
+	@Override
+	@Transactional
+	public List<Book> getAuthorBooks(int theId) {
+		
+		return bookDAO.getAuthorBooks(theId);
 	}
 
 }

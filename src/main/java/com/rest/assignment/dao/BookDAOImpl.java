@@ -6,20 +6,30 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
+import com.rest.assignment.entity.Author;
 import com.rest.assignment.entity.Book;
+import com.rest.assignment.service.AuthorService;
 
 @Repository
 public class BookDAOImpl implements BookDAO {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	@Autowired
+	private AuthorService authorService;
 
 	@Override
-	public List<Book> findAll() {
+	public List<Book> findAll(PageRequest pageRequest) {
 		Session currentSession = sessionFactory.getCurrentSession();
+		
 		Query<Book> theQuery = currentSession.createQuery("from Book",Book.class);
+		
+		theQuery.setFirstResult(pageRequest.getPageNumber());
+		theQuery.setMaxResults(pageRequest.getPageSize());
 		List<Book> books = theQuery.getResultList();
 		return books;
 	}
@@ -34,6 +44,7 @@ public class BookDAOImpl implements BookDAO {
 	@Override
 	public void save(Book theBook) {
 		Session currentSession = sessionFactory.getCurrentSession();
+	
 		
 		
 		currentSession.saveOrUpdate(theBook);
@@ -48,5 +59,18 @@ public class BookDAOImpl implements BookDAO {
 		theQuery.setParameter("bookId", theId);
 		theQuery.executeUpdate();
 	}
+
+	@Override
+	public List<Book> getAuthorBooks(int authorId) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Author theAuthor = currentSession.get(Author.class, authorId);
+		
+		
+		return null;
+	}
+
+
+
+	
 
 }
